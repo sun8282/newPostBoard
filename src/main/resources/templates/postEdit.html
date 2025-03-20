@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Details</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/init.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <style>
+        a{
+    text-decoration: none;
+    color: inherit;
+}
+.postContainer {
+          max-width: 600px;
+          margin: 50px auto;
+          padding: 20px;
+          border: 1px solid #ccc;
+          border-radius: 10px;
+          box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+      }
+      .form-group {
+          margin-bottom: 15px;
+      }
+      .form-group label {
+          font-weight: bold;
+      }
+      .form-group input, .form-group select, .form-group textarea {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+      }
+      .submit-btn {
+          background-color: #007bff;
+          color: white;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+      }
+      .submit-btn:hover {
+          background-color: #0056b3;
+      }
+    </style>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+</head>
+<body>
+<div th:insert="~{fragments/header :: header}"></div>
+<div class="wrapper">
+<div class="profile-container">
+    <h1>Post Details</h1>
+    <form th:action="@{/posts/{postId}(postId=${postId})}" method="post" enctype="multipart/form-data" class="form">
+        <input type="hidden" name="_method" value="PATCH"/>
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select id="category" name="category" required>
+                <option value="free">Free Board</option>
+                <option value="notice">Notice Board</option>
+                <option value="resource">Resource Board</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" th:value="${postDto.getTitle()}" name="title"/>
+        </div>
+
+        <div class="form-group">
+            <label for="editor">Content:</label>
+            <div class="quill-container">
+                <div id="editor" th:utext="${postDto.getContent()}"></div>
+            </div>
+        </div>
+            <input type="hidden" name="content" id="content">
+            <input type="hidden" name="imageUrls" id="imageUrls">
+            <div th:insert="~{fragments/errors :: errors}"></div>
+            <button type="submit" class="submit-btn">Edit Post</button>
+    </form>
+</div>
+</div>
+<div th:insert="~{fragments/footer :: footer}"></div>
+<script>
+    // Quill 에디터 초기화
+      const quill = new Quill('#editor', {
+          theme: 'snow',
+          placeholder: 'Write your post here...',
+          modules: {
+              toolbar: [
+                  [{ header: [1, 2, 3, 4, false] }],
+                  ['bold', 'italic', 'underline'],
+                  ['image', 'code-block'],
+                  [{ list: 'ordered' }, { list: 'bullet' }]
+              ]
+          }
+      });
+
+
+      async function uploadImage(base64Image) {
+          try {
+              const response = await fetch('/api/post/upload-image', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ image: base64Image })
+              });
+
+              const result = await response.json();
+              return result.imageUrl;
+          } catch (error) {
+              console.error("이미지 업로드 실패:", error);
+              return null;
+          }
+      }
+
+      document.querySelector('.submit-btn').addEventListener("click", async (e) => {
+          e.preventDefault();
+
+          const content = quill.root.innerHTML;
+          document.getElementById('content').value = content;
+
+          const imageElements = document.querySelectorAll('.quill-container img');
+          let imageUrls = [];
+
+          for (const img of imageElements) {
+              if (img.src.startsWith('data:image')) {
+                  const uploadedUrl = await uploadImage(img.src);
+                  if (uploadedUrl) {
+                      imageUrls.push(uploadedUrl);
+                  }
+              } else {
+                  imageUrls.push(img.src);
+              }
+          }
+
+          document.getElementById('imageUrls').value = JSON.stringify(imageUrls);
+          console.log("변환된 이미지 URL 리스트:", imageUrls);
+
+          document.querySelector('.form').submit();
+      });
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+<div th:if="${errors}"  th:fragment="errors" xmlns:th="http://www.w3.org/1999/xhtml">
+  <ul>
+    <li th:each="error : ${errors}" th:text="${error.defaultMessage}" class="error"></li>
+  </ul>
+</div>
