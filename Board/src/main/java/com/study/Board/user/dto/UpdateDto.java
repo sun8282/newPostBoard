@@ -1,6 +1,5 @@
 package com.study.Board.user.dto;
 
-import com.study.Board.user.entity.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -24,8 +23,8 @@ public class UpdateDto {
 
     private MultipartFile profileImage;
 
-    public Object getProfileImage(){
-        return (profileImage == null || profileImage.isEmpty()) ? "/image/profileImage/default-profile.png" : profileImage;
+    public Object getProfileImage() {
+        return (profileImage == null || profileImage.isEmpty()) ? "/images/default-profile.png" : profileImage;
     }
 
 }

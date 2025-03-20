@@ -1,11 +1,13 @@
 package com.study.Board.user.dto;
 
 import com.study.Board.user.entity.User;
-import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -28,8 +30,8 @@ public class RegisterDto {
 
     private MultipartFile profileImage;
 
-    public Object getProfileImage(){
-        return (profileImage == null || profileImage.isEmpty()) ? "/image/profileImage/default-profile.png" : profileImage;
+    public Object getProfileImage() {
+        return (profileImage == null || profileImage.isEmpty()) ? "/images/default-profile.png" : profileImage;
     }
 
     public User toEntity(String encodedPassword, String profileImagePath) {
@@ -42,5 +44,6 @@ public class RegisterDto {
                 .profileImage(profileImagePath)
                 .build();
     }
+
 }
 

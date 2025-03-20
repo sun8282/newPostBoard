@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>User Details</title>
-    <link rel="stylesheet" th:href="@{/header.css}">
-    <link rel="stylesheet" th:href="@{/init.css}">
-    <link rel="stylesheet" th:href="@{/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/init.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
     <style>
         a{
     text-decoration: none;
@@ -76,6 +76,7 @@
         </div>
             <input type="hidden" name="content" id="content">
             <input type="hidden" name="imageUrls" id="imageUrls">
+            <div th:insert="~{fragments/errors :: errors}"></div>
             <button type="submit" class="submit-btn">Edit Post</button>
     </form>
 </div>
@@ -99,7 +100,7 @@
 
       async function uploadImage(base64Image) {
           try {
-              const response = await fetch('/api/posts/upload-image', {
+              const response = await fetch('/api/post/upload-image', {
                   method: 'POST',
                   headers: {
                       'Content-Type': 'application/json'

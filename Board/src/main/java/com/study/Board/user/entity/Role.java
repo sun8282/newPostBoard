@@ -2,13 +2,10 @@ package com.study.Board.user.entity;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Collection;
-
 public enum Role implements GrantedAuthority {
+
     USER,
-    BANNED,
-    MANAGER,
-    ADMIN;
+    BANNED;
 
     @Override
     public String getAuthority() {

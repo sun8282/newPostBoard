@@ -3,18 +3,17 @@ package com.study.Board.user.controller;
 import com.study.Board.user.dto.RegisterDto;
 import com.study.Board.user.service.ProfileService;
 import com.study.Board.user.service.UserService;
-
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-
-import java.io.IOException;
-
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/register")
@@ -23,17 +22,22 @@ public class RegisterController {
     private final UserService userService;
     private final ProfileService profileService;
 
-    @GetMapping("")
+    @GetMapping
     public String showRegistrationForm(Model model) {
         model.addAttribute("userDto", new RegisterDto());
         return "register";
     }
 
-    @PostMapping("")
+    @PostMapping
     public String registerUser(@ModelAttribute("userDto") @Valid RegisterDto userDto,
                                BindingResult bindingResult,
-                               @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws IOException {
+                               @RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
+                               Model model) {
         if (bindingResult.hasErrors()) {
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                log.error("Register Error: {}", error.getDefaultMessage());
+            }
+            model.addAttribute("errors", bindingResult.getAllErrors());
             return "register";
         }
 
@@ -42,4 +46,5 @@ public class RegisterController {
 
         return "redirect:/login";
     }
+
 }

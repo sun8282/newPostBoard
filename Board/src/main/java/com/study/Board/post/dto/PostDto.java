@@ -26,7 +26,6 @@ public class PostDto {
 
     private MultipartFile postProfileImage;
 
-
     private List<String> imageUrls;
 
     public List<String> getImageUrls() {
@@ -46,10 +45,11 @@ public class PostDto {
                 .build();
     }
 
-    public PostImage toEntity(String imagePath, Post post){
+    public PostImage toEntity(String imagePath, Post post) {
         return PostImage.builder()
                 .imageUrl(imagePath)
                 .post(post)
                 .build();
     }
+
 }

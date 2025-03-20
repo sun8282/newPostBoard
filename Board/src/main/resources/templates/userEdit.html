@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>User Details</title>
-    <link rel="stylesheet" th:href="@{/header.css}">
-    <link rel="stylesheet" th:href="@{/init.css}">
-    <link rel="stylesheet" th:href="@{/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/init.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
     <style>
         .profile-container {
             text-align: center;
@@ -45,7 +45,7 @@
     <form th:action="@{/user/{userId}(userId=${currentUser.getUserId()})}" method="post" enctype="multipart/form-data">
         <input type="hidden" name="_method" value="PATCH"/>
         <div class="profile-container" onclick="document.getElementById('profileInput').click();">
-            <img id="profilePreview" th:src="@{/image/profileImage/default-profile.png}" alt="Profile Image" class="profile-img">
+            <img id="profilePreview" th:src="@{/images/default-profile.png}" alt="Profile Image" class="profile-img">
             <input type="file" id="profileInput" name="profileImage" class="file-input" accept="image/*"
                    onchange="previewImage(event)">
         </div>
@@ -54,7 +54,7 @@
             <p><strong>Username:</strong> <input th:value="${currentUser.getUsername()}" name="userName" required/></p>
             <p><strong>Email:</strong> <input th:value="${currentUser.getUserEmail()}" name="userEmail" required/></p>
         </div>
-
+        <div th:insert="~{fragments/errors :: errors}"></div>
         <button type="submit" class="edit-btn">submit</button>
     </form>
 </div>

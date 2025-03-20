@@ -2,7 +2,6 @@ package com.study.Board.user.service;
 
 import com.study.Board.user.entity.User;
 import com.study.Board.user.repository.UserRepository;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,4 +23,5 @@ public class CustomUserDetailsService implements UserDetailsService {
         System.out.println(user.getUserId());
         return new CustomUserDetails(user);
     }
+
 }

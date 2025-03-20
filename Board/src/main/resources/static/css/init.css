@@ -4,3 +4,10 @@
      padding: 0;
      color: #333;
  }
+
+ li{
+     list-style: none;
+ }
+ .error{
+     color: #990F02;
+ }

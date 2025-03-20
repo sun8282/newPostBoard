@@ -1,27 +1,19 @@
 package com.study.Board.user.controller;
 
-import com.study.Board.user.dto.RegisterDto;
 import com.study.Board.user.dto.UpdateDto;
-import com.study.Board.user.entity.User;
-import com.study.Board.user.service.CustomUserDetails;
 import com.study.Board.user.service.ProfileService;
 import com.study.Board.user.service.UserService;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -47,19 +39,21 @@ public class UserController {
     public String editResponse(Model model,
                                @ModelAttribute("userDto") @Valid UpdateDto userDto,
                                BindingResult bindingResult,
-                               @RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
-                               HttpServletRequest request
-    ) throws IOException {
+                               @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
         if (bindingResult.hasErrors()) {
             for (ObjectError error : bindingResult.getAllErrors()) {
-                System.out.println("Error: " + error.getDefaultMessage());
+                log.error("Error: {}", error.getDefaultMessage());
+                model.addAttribute("errors", bindingResult.getAllErrors());
             }
             return "userEdit";
         }
 
         String profileImagePath = profileService.saveProfileImage(profileImage);
+        userService.updateUser(userDto, profileImagePath);
 
-        userService.updateUser(userDto, profileImagePath,request);
+        log.info("User {} updated successfully", userDto.getUserName());
+
         return "redirect:/";
     }
+
 }

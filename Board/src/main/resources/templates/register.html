@@ -5,9 +5,9 @@
     <title>회원가입</title>
 
     <!-- CSS 파일 추가 -->
-    <link rel="stylesheet" th:href="@{/header.css}">
-    <link rel="stylesheet" th:href="@{/init.css}">
-    <link rel="stylesheet" th:href="@{/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/init.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -163,7 +163,7 @@
                 <label for="userName">이름</label>
                 <input type="text" id="userName" name="userName" required>
             </div>
-
+            <div th:insert="~{fragments/errors :: errors}"></div>
             <button type="submit" class="register-btn">회원가입</button>
         </form>
     </div>

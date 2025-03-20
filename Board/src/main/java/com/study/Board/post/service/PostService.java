@@ -3,12 +3,14 @@ package com.study.Board.post.service;
 import com.study.Board.post.dto.PostDto;
 import com.study.Board.post.entity.Post;
 import com.study.Board.post.entity.PostImage;
-import com.study.Board.post.repository.PostImageRepository;
 import com.study.Board.post.repository.PostRepository;
 import com.study.Board.user.entity.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,15 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Transactional
 @Service
 @RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
-    private final PostImageRepository postImageRepository;
 
-    private final Base64Service base64Service;
     private final String SAVE_DIR = "C:\\Users\\user\\Desktop\\image\\postProfileImage\\";
     private final String UPLOAD_DIR = "/image/postProfileImage/";
 
@@ -56,20 +55,20 @@ public class PostService {
         return UPLOAD_DIR + filename;
     }
 
+    @Transactional
     public void createPost(PostDto postDto, User currentUser, String profileImagePath) {
         Post newPost = postDto.toEntity(currentUser, profileImagePath);
-        postRepository.save(newPost);
 
         List<PostImage> images = new ArrayList<>();
 
-        for (String imageUrl : postDto.getImageUrls()){
+        for (String imageUrl : postDto.getImageUrls()) {
             imageUrl = imageUrl.replace("[", "").replace("]", "").trim();
             PostImage newPostImage = postDto.toEntity(imageUrl, newPost);
-            postImageRepository.save(newPostImage);
+
             images.add(newPostImage);
         }
 
-        newPost.setImages(images);
+        newPost.updateImage(images);
         postRepository.save(newPost);
     }
 
@@ -86,8 +85,6 @@ public class PostService {
         Post post = getPost(postId);
         return id != post.getUser().getId();
     }
-
-
 
     public void updatePost(Long postId, PostDto postDto) {
         Post post = getPost(postId);
@@ -115,11 +112,10 @@ public class PostService {
     }
 
     public Page<Post> isPossibleCategory(String category, int page, int size) {
-        if(category == null){
+        if (category == null) {
             return getAllPosts(page, size);
         }
         return getPostsByCategory(category, page, size);
     }
-
 
 }

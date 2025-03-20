@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Post</title>
-    <link rel="stylesheet" th:href="@{/header.css}">
-    <link rel="stylesheet" th:href="@{/init.css}">
-    <link rel="stylesheet" th:href="@{/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/init.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
     <style>
         .postContainer {
             max-width: 600px;
@@ -39,6 +39,7 @@
         .submit-btn:hover {
             background-color: #0056b3;
         }
+
     </style>
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
@@ -103,7 +104,7 @@
 
     async function uploadImage(base64Image) {
         try {
-            const response = await fetch('/api/posts/upload-image', {
+            const response = await fetch('/api/post/upload-image', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

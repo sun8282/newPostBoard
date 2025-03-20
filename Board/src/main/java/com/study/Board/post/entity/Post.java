@@ -2,13 +2,12 @@ package com.study.Board.post.entity;
 
 import com.study.Board.post.dto.PostDto;
 import com.study.Board.user.entity.User;
-
 import jakarta.persistence.*;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,8 +15,8 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Post {
 
     @Id
@@ -43,11 +42,12 @@ public class Post {
 
     private String postProfileImage;
 
+    @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<PostImage> images = new ArrayList<PostImage>();
+    private List<PostImage> images = new ArrayList<>();
 
     @Builder
     private Post(String title, String content, String category, User user, String postProfileImage) {
@@ -58,10 +58,14 @@ public class Post {
         this.postProfileImage = postProfileImage;
     }
 
-    public void updatePost(PostDto postDto){
+    public void updatePost(PostDto postDto) {
         this.title = postDto.getTitle();
         this.content = postDto.getContent();
         this.category = postDto.getCategory();
+    }
+
+    public void updateImage(List<PostImage> images) {
+        this.images = images;
     }
 
 }

@@ -1,30 +1,20 @@
 package com.study.Board.user.entity;
 
 import com.study.Board.post.entity.Post;
-import com.study.Board.user.dto.RegisterDto;
 import com.study.Board.user.dto.UpdateDto;
-import com.study.Board.user.service.CustomUserDetails;
 import jakarta.persistence.*;
-
 import lombok.Builder;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @Table(name = "app_user")
 public class User implements UserDetails {
@@ -78,4 +68,5 @@ public class User implements UserDetails {
         this.userEmail = userDto.getUserEmail();
         this.profileImage = profileImagePath;
     }
+
 }

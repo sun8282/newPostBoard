@@ -1,46 +1,36 @@
 package com.study.Board.post.controller;
 
-import com.study.Board.post.service.Base64Service;
+import com.study.Board.global.exception.ImageProcessingException;
 import com.study.Board.post.util.Base64Util;
-
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Base64;
 import java.util.Map;
-import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/api/posts")
+@RequestMapping("/api/post")
 @RequiredArgsConstructor
 public class PostApiController {
 
-    private final Base64Service base64Service;
+    private final Base64Util base64Util;
 
-    @PostMapping("/upload-image")
-    public ResponseEntity<Map<String, String>> uploadImage(@RequestBody Map<String, String> request) {
-
-        try {
-            String base64Image = request.get("image");
-            if (base64Image == null || base64Image.isEmpty()) {
-                return ResponseEntity.badRequest().body(Map.of("error", "이미지가 없습니다."));
-            }
-
-            String imageUrl = base64Service.saveImage(base64Image);
-            return ResponseEntity.ok(Map.of("imageUrl", imageUrl));
-
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "이미지 저장 실패"));
+    @PostMapping("/{postId}/image")
+    public ResponseEntity<Map<String, String>> uploadImage(@RequestBody Map<String, String> request) throws IOException {
+        String base64Image = request.get("image");
+        if (base64Image == null || base64Image.isEmpty()) {
+            throw new ImageProcessingException("이미지 저장 실패");
         }
+
+        String imageUrl = base64Util.saveImage(base64Image);
+        return ResponseEntity.ok(Map.of("imageUrl", imageUrl));
     }
+
 }
 
 

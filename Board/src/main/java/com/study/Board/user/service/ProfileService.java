@@ -1,6 +1,6 @@
 package com.study.Board.user.service;
 
-import com.study.Board.user.entity.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class ProfileService {
 
@@ -17,16 +18,26 @@ public class ProfileService {
     //private final String UPLOAD_DIR = "/uploads/profileImages/";
     private final String SAVE_DIR = "C:\\Users\\user\\Desktop\\image\\profileImage\\";
     private final String UPLOAD_DIR = "/image/profileImage/";
-    public String saveProfileImage(MultipartFile file) throws IOException {
-        if(file.isEmpty()){
-            return UPLOAD_DIR+"default-profile.png";
+
+    public String saveProfileImage(MultipartFile file) {
+        if (file.isEmpty()) {
+            return "/images/default-profile.png";
         }
+
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
         Path path = Paths.get(SAVE_DIR + fileName);
 
-        Files.createDirectories(path.getParent());
+        try {
+            Files.createDirectories(path.getParent());
+            Files.write(path, file.getBytes());
 
-        Files.write(path, file.getBytes());
-        return UPLOAD_DIR+fileName;
+            return UPLOAD_DIR + fileName;
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+
+            throw new RuntimeException("에러가 발생했다.");
+        }
     }
+
 }

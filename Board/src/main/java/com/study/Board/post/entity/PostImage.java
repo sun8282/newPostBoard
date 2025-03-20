@@ -4,11 +4,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class PostImage {
 
@@ -27,4 +25,5 @@ public class PostImage {
         this.imageUrl = imageUrl;
         this.post = post;
     }
+
 }
