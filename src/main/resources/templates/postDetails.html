@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Details</title>
+    <link rel="stylesheet" th:href="@{/header.css}">
+    <link rel="stylesheet" th:href="@{/init.css}">
+    <link rel="stylesheet" th:href="@{/footer.css}">
+    <style>
+        a{
+            text-decoration: none;
+            color: inherit;
+        }
+        .profile-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .user-info {
+            margin-top: 20px;
+        }
+        .edit-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .edit-btn:hover {
+            background-color: #0056b3;
+        }
+        .delete-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #E3242B;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            background-color: #990F02;
+        }
+    </style>
+</head>
+<body>
+<div th:insert="~{fragments/header :: header}"></div>
+<div class="wrapper">
+<div class="profile-container">
+    <h1>Post Details</h1>
+
+    <div class="posts-container">
+        <h1 th:text="${postDto.getTitle()}"></h1>
+            <div class="post-details">
+                <h3 class="post-title" th:text="${postDto.getTitle()}">Post Title</h3>
+                <p class="post-meta">
+                    <span th:utext="${postDto.getContent()}"></span>
+                    <span class="like-count">좋아요 0</span>
+                </p>
+            </div>
+        <button class="edit-btn"><a th:href="@{/posts/{postId}/edit(postId=${postId})}">Edit Post</a></button>
+        <form th:action="@{/posts/{postId}(postId=${postId})}" method="post">
+            <input type="hidden" name="_method" value="DELETE"/>
+            <button class="delete-btn" type="submit">Delete Post</button>
+        </form>
+
+    </div>
+</div>
+</div>
+<div th:insert="~{fragments/footer :: footer}"></div>
+<script>
+    window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const message = urlParams.get("authentication"); // URL에서 "message" 파라미터 값 가져오기
+
+    if (message === 'no') {
+        alert("수정 권한이 없습니다."); // 메시지가 있으면 alert 창 띄우기
+    }
+};
+</script>
+</body>
+</html>
